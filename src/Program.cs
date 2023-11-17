@@ -10,55 +10,76 @@ string url = "https://raw.githubusercontent.com/JakeRadMSFT/wifi-controller/main
 
 int StarlinkPin = 18;
 int RouterPin = 16;
-   //using GpioController controller = new GpioController();
+
+using GpioController controller = new GpioController();
 
 
-    // Setup pins as outputs
-    // controller.OpenPin(StarlinkPin, PinMode.Output);
-    // controller.OpenPin(RouterPin, PinMode.Output);
+// Setup pins as outputs
+controller.OpenPin(StarlinkPin, PinMode.Output);
+controller.OpenPin(RouterPin, PinMode.Output);
 
 
-    while (true)
+while (true)
+{
+    // Turn on router and starlink
+    controller.Write(StarlinkPin, PinValue.High);
+    controller.Write(RouterPin, PinValue.High);
+
+    // Wait some time for things to start up
+    await Task.Delay(TimeSpan.FromMinutes(5));
+
+    try
     {
-        try
+        using (HttpClient client = new HttpClient())
         {
-            using (HttpClient client = new HttpClient())
+            // Create a request message
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+            // Add headers to prevent caching
+            request.Headers.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
             {
-                HttpResponseMessage response = await client.GetAsync(url);
+                NoCache = true,
+                NoStore = true,
+                MustRevalidate = true,
+                MaxAge = TimeSpan.Zero
+            };
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
+            // Send the request
+            var response = await client.SendAsync(request);
 
-                    // Parse JSON using System.Text.Json
-                    var data = JsonSerializer.Deserialize<JsonElement>(json);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
 
-                    // Get values from JSON
-                    bool starlinkStatus = data.GetProperty("starlink").GetBoolean();
-                    bool routerStatus = data.GetProperty("router").GetBoolean();
+                // Parse JSON using System.Text.Json
+                var data = JsonSerializer.Deserialize<JsonElement>(json);
 
-                    // Control GPIO pins based on values
-                    //controller.Write(StarlinkPin, starlinkStatus ? PinValue.High : PinValue.Low);
-                    //controller.Write(RouterPin, routerStatus ? PinValue.High : PinValue.Low);
+                // Get values from JSON
+                bool starlinkStatus = data.GetProperty("starlink").GetBoolean();
+                bool routerStatus = data.GetProperty("router").GetBoolean();
 
-                    // Get next check time
-                    var nextCheck = DateTime.Parse(data.GetProperty("nextCheck").GetString());
-                    var currentTime = DateTime.UtcNow;
+                // Control GPIO pins based on values
+                controller.Write(StarlinkPin, starlinkStatus ? PinValue.High : PinValue.Low);
+                controller.Write(RouterPin, routerStatus ? PinValue.High : PinValue.Low);
 
-                    // Calculate time until next check (in milliseconds)
-                    var timeUntilNextCheck = (nextCheck - currentTime).TotalMilliseconds;
+                // Get next check time
+                var nextCheck = DateTime.Parse(data.GetProperty("nextCheck").GetString());
+                var currentTime = DateTime.UtcNow;
 
-                    // Wait for 30 minutes
-                    await Task.Delay(TimeSpan.FromMinutes(30));
-                }
-                else
-                {
-                    Console.WriteLine("Error: " + response.StatusCode);
-                }
+                // Calculate time until next check (in milliseconds)
+                var timeUntilNextCheck = (nextCheck - currentTime).TotalMilliseconds;
+
+                // Wait for 30 minutes
+                await Task.Delay(TimeSpan.FromMinutes(15));
+            }
+            else
+            {
+                Console.WriteLine("Error: " + response.StatusCode);
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception: " + ex.Message);
-        }
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Exception: " + ex.Message);
+    }
+}
