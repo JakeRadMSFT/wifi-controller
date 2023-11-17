@@ -6,16 +6,16 @@ using System.Device.Gpio;
 using System.Text.Json;
 
 // URL for HTTP GET request
-string url = "http://IslandCorner.com/internet.json";
+string url = "https://raw.githubusercontent.com/JakeRadMSFT/wifi-controller/main/src/settings.json";
 
 int StarlinkPin = 18;
 int RouterPin = 16;
-using GpioController controller = new GpioController();
+   //using GpioController controller = new GpioController();
 
 
-// Setup pins as outputs
-    controller.OpenPin(StarlinkPin, PinMode.Output);
-    controller.OpenPin(RouterPin, PinMode.Output);
+    // Setup pins as outputs
+    // controller.OpenPin(StarlinkPin, PinMode.Output);
+    // controller.OpenPin(RouterPin, PinMode.Output);
 
 
     while (true)
@@ -38,8 +38,8 @@ using GpioController controller = new GpioController();
                     bool routerStatus = data.GetProperty("router").GetBoolean();
 
                     // Control GPIO pins based on values
-                    controller.Write(StarlinkPin, starlinkStatus ? PinValue.High : PinValue.Low);
-                    controller.Write(RouterPin, routerStatus ? PinValue.High : PinValue.Low);
+                    //controller.Write(StarlinkPin, starlinkStatus ? PinValue.High : PinValue.Low);
+                    //controller.Write(RouterPin, routerStatus ? PinValue.High : PinValue.Low);
 
                     // Get next check time
                     var nextCheck = DateTime.Parse(data.GetProperty("nextCheck").GetString());
