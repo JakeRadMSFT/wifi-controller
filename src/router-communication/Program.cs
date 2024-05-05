@@ -1,7 +1,7 @@
 ﻿// using System.Device.Gpio;
 
 // URL for HTTP GET request
-const string remoteSettingsUrl = "https://raw.githubusercontent.com/JakeRadMSFT/wifi-controller/main/src/settings.json";
+const string remoteSettingsUrl = "https://raw.githubusercontent.com/JakeRadMSFT/wifi-controller/main/src/wifi-controller/settings.json";
 
 const int StarlinkPin = 24;
 const int RouterPin = 14;
