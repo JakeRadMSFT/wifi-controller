@@ -8,6 +8,12 @@ public class Settings
     [JsonPropertyName("force-router-enabled")]
     public bool ForceRouterEnabled { get; set; }
 
+    [JsonPropertyName("force-starlink-disabled")]
+    public bool ForceStarlinkDisabled { get; set; }
+
+    [JsonPropertyName("force-router-disabled")]
+    public bool ForceRouterDisabled { get; set; }
+
     [JsonPropertyName("upload-speed-threshold")]
     public float UploadSpeedThreshold { get; set; }
 

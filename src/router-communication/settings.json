@@ -1,6 +1,8 @@
 {
   "force-starlink-enabled": false,
   "force-router-enabled": false,
+  "force-starlink-disabled": false,
+  "force-router-disabled": false,
   "upload-speed-threshold": 1048576,
   "download-speed-threshold": 1048576,
   "ignore-list": [

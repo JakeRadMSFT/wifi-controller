@@ -23,34 +23,35 @@ var remoteSettings = new RemoteSettings(remoteSettingsUrl);
 
 var detectedActivity = false;
 
-do
+// Turn on router and starlink
+controller.Write(StarlinkPin, PinValue.High);
+controller.Write(RouterPin, PinValue.High);
+
+// Wait some time for things to start up
+await Task.Delay(TimeSpan.FromSeconds(10));
+
+try
 {
-    // Turn on router and starlink
-    controller.Write(StarlinkPin, PinValue.High);
-    controller.Write(RouterPin, PinValue.High);
 
-    // Wait some time for things to start up
-    await Task.Delay(TimeSpan.FromSeconds(10));
+    var settings = await remoteSettings.GetSettingsAsync();
 
-    try
-    {
+    var starlinkEnabled = (!settings.ForceStarlinkDisabled && detectedActivity) || settings.ForceStarlinkEnabled;
+    var routerEnabled = (!settings.ForceRouterDisabled && detectedActivity) || settings.ForceRouterEnabled;
 
-        var settings = await remoteSettings.GetSettingsAsync();
+    // Control GPIO pins based on values
+    controller.Write(StarlinkPin, starlinkEnabled ? PinValue.High : PinValue.Low);
+    controller.Write(RouterPin, routerEnabled ? PinValue.High : PinValue.Low);
 
-        // Control GPIO pins based on values
-        controller.Write(StarlinkPin, detectedActivity || settings.ForceStarlinkEnabled ? PinValue.High : PinValue.Low);
-        controller.Write(RouterPin, detectedActivity || settings.ForceRouterEnabled ? PinValue.High : PinValue.Low);
+    Console.WriteLine("Starlink On: " + starlinkEnabled);
+    Console.WriteLine("Router On: " + routerEnabled);
 
 
-        var router = new Router(RouterIpAddress, RouterUsername, RouterPassword, RouterThumbprint);
-        detectedActivity = await router.HasNetworkActivity(activitySampleIntervalMilliseconds, settings.UploadSpeedThreshold, settings.DownloadSpeedThreshold, settings.IgnoreList.ToList());
+    var router = new Router(RouterIpAddress, RouterUsername, RouterPassword, RouterThumbprint);
+    detectedActivity = await router.HasNetworkActivity(activitySampleIntervalMilliseconds, settings.UploadSpeedThreshold, settings.DownloadSpeedThreshold, settings.IgnoreList.ToList());
 
-        await Task.Delay(1000);
-
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Exception: " + ex.Message);
-    }
-
-} while (true);
+    await Task.Delay(1000);
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Exception: " + ex.Message);
+}
