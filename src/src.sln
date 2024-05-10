@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wifi-controller", "wifi-controller\wifi-controller.csproj", "{D84F106B-A0C4-48E7-BBDA-34E02F653029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "raspberry-pi-cron", "wifi-controller\raspberry-pi-cron.csproj", "{D84F106B-A0C4-48E7-BBDA-34E02F653029}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "router-communication", "router-communication\router-communication.csproj", "{7A50E464-5B42-4440-ABC7-9760921B3811}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-environment", "router-communication\test-environment.csproj", "{7A50E464-5B42-4440-ABC7-9760921B3811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "starlink-controller", "starlink-controller\starlink-controller.csproj", "{4E327D83-8C79-415C-9E2D-FCADFA2D75CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7A50E464-5B42-4440-ABC7-9760921B3811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A50E464-5B42-4440-ABC7-9760921B3811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A50E464-5B42-4440-ABC7-9760921B3811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E327D83-8C79-415C-9E2D-FCADFA2D75CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E327D83-8C79-415C-9E2D-FCADFA2D75CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E327D83-8C79-415C-9E2D-FCADFA2D75CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E327D83-8C79-415C-9E2D-FCADFA2D75CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

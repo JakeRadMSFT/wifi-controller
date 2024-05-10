@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-internal class Router
+public class Router
 {
     private string apiUrl;
     private HttpClient client;
